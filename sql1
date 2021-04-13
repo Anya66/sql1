@@ -1,0 +1,74 @@
+CREATE TABLE guest
+(gid int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+lastname nvarchar(50) NOT NULL,
+name nvarchar(15) NOT NULL,
+phnumber int NOT NULL,
+adress nvarchar(50) NOT NULL);
+CREATE TABLE guest
+(gid int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+lastname nvarchar(50) NOT NULL,
+name nvarchar(15) NOT NULL,
+phnumber int NOT NULL,
+adress nvarchar(50) NOT NULL);
+
+CREATE TABLE building
+(bid int NOT NULL PRIMARY KEY,
+latitude decimal NOT NULL,
+longitude decimal NOT NULL,
+am_rooms int NOT NULL,
+am_floors int NOT NULL,
+description nvarchar(100) NOT NULL);
+
+CREATE TABLE room
+(rid int NOT NULL PRIMARY KEY,
+square int NOT NULL,
+sleepplaces int NOT NULL,
+avail_bathroom bit NOT NULL,
+max_people int NOT NULL,
+floor_ int NOT NULL,
+bid int NOT NULL);
+
+CREATE TABLE reservation
+(resid int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+periodliving nvarchar(70) NOT NULL,
+durationliving int  NOT NULL,
+board nvarchar(50) NOT NULL,
+gid int NOT NULL,
+rid int NOT NULL);
+ALTER TABLE room 
+ADD CONSTRAINT FK_room_building
+FOREIGN KEY (bid)
+REFERENCES DM1_2021_1910_s3n2_251.dbo.building(bid);
+
+ALTER TABLE reservation 
+ADD CONSTRAINT FK_reservation_guest
+FOREIGN KEY (gid)
+REFERENCES DM1_2021_1910_s3n2_251.dbo.guest(gid),
+CONSTRAINT FK_reservation_room
+FOREIGN KEY (rid)
+REFERENCES DM1_2021_1910_s3n2_251.dbo.room(rid),
+CONSTRAINT check_duration
+CHECK (durationliving >= 3);
+
+ALTER  TABLE reservation 
+ADD CONSTRAINT check_duration_1
+CHECK (durationliving <= 30);
+
+
+INSERT INTO building VALUES (1, 21.3, 75.6, 300, 3, 'HOTEL');
+INSERT INTO building VALUES (2, 48.3, 55.5, 15, 2, 'MOTEL');
+INSERT INTO room VALUES (1, 35, 3, 1, 3, 1, 1);
+INSERT INTO room VALUES (2, 58, 2, 1, 2, 3, 1);
+INSERT INTO room VALUES (3, 30, 2, 1, 2, 2, 1);
+INSERT INTO room VALUES (4, 11, 3, 0, 5, 1, 2);
+INSERT INTO room VALUES (5, 15, 4, 1, 5, 2, 2);
+INSERT INTO guest VALUES(1, 'Antonov', 'Anton', 12345, 'Moscow');
+INSERT INTO guest VALUES(2, 'Mikhailov', 'Mikhail', 54321, 'Moscow');
+INSERT INTO guest VALUES(3, 'Svetlova', 'Svetlana', 21345, 'Moscow');
+INSERT INTO guest VALUES(4, 'Aleksandrova', 'Aleksandra', 32145, 'Moscow');
+INSERT INTO reservation VALUES('2019-05-21 - 2019-06-01', 10, '3 times a day', 1, 1);
+INSERT INTO reservation VALUES('2020-05-16 - 2020-05-21', 5, '3 times a day', 1, 2);
+INSERT INTO reservation VALUES('2020-10-15 - 2020-10-18', 3, 'breakfast', 2, 5);
+INSERT INTO reservation VALUES('2020-12-30 - 2021-01-06', 7, 'breakfast', 2, 4);
+INSERT INTO reservation VALUES('2020-11-10 - 2020-10-20', 10, '3 times a day', 3, 3);
+INSERT INTO reservation VALUES('2020-07-01 - 2020-07-30', 29, 'breakfast', 4, 5)
